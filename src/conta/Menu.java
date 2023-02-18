@@ -7,7 +7,7 @@ public class Menu {
         Scanner input = new Scanner(System.in);
         int opcaoUsuario;
 
-        do {
+        while (true){
             System.out.println("*****************************************************");
             System.out.println("                                                     ");
             System.out.println("                BANCO DO BRAZIL COM Z                ");
@@ -28,6 +28,12 @@ public class Menu {
             System.out.println("Entre com a opção desejada:                          ");
             System.out.println("                                                     ");
             opcaoUsuario = input.nextInt();
+
+            if (opcaoUsuario == 9) {
+                System.out.println("\nBanco do Brazil com Z - O seu Futuro começa aqui!");
+                input.close();
+                System.exit(0);
+            }
 
             switch (opcaoUsuario) {
                 case 1:
@@ -62,17 +68,11 @@ public class Menu {
                     System.out.println("Transferência entre contas:\n\n");
 
                     break;
-                case 9:
-                    System.out.println("\nBanco do Brazil com Z - O seu Futuro começa aqui!");
-
-                    break;
                 default:
                     System.out.println("Opção inválida!\n\n");
                     break;
             }
 
-        } while (opcaoUsuario != 9);
-
-        input.close();
+        }
     }
 }
