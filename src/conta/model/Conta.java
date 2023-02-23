@@ -74,6 +74,7 @@ public class Conta {
         switch (this.getTipo()){
             case 1:
                 tipo = "Conta Corrente";
+                break;
             case 2:
                 tipo = "Conta Poupança";
             break;
