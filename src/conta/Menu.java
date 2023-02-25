@@ -1,37 +1,39 @@
 package conta;
 
-import conta.model.Conta;
+import conta.controller.ContaController;
 import conta.model.ContaCorrente;
 import conta.model.ContaPoupanca;
 import conta.util.Cores;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Menu {
     public static void main(String[] args) {
-
-        //Teste classe conta corrente
-        ContaCorrente cc1 = new ContaCorrente(2,123, 1, "Mariana", 15000.0f, 1000.f);
-        cc1.visualizar();
-        cc1.sacar(12000.0f);
-        cc1.visualizar();
-        cc1.depositar(5000.0f);
-        cc1.visualizar();
-
-        //Testa classe conta Poupança
-        ContaPoupanca cp1 = new ContaPoupanca(3, 123, 2, "Victor", 100000.0f, 15);
-        cp1.visualizar();
-        cp1.sacar(1000.0f);
-        cp1.visualizar();
-        cp1.depositar(5000.0f);
-        cp1.visualizar();
-
-
+        Locale.setDefault(Locale.US);
         Scanner input = new Scanner(System.in);
-        int opcaoUsuario = 0;
+        int opcaoUsuario, numero, agencia, tipo, aniversario;
+        String titular;
+        float saldo, limite;
 
+        ContaController contas = new ContaController();
+
+        ContaCorrente cc1 = new ContaCorrente(contas.getNumero(), 123, 1, "Gabriela", 2000,
+                500);
+        contas.cadastrar(cc1);
+        ContaCorrente cc2 = new ContaCorrente(contas.getNumero(), 124, 1, "Severina", 5000,
+                600);
+        contas.cadastrar(cc2);
+
+        ContaPoupanca cp1 = new ContaPoupanca(contas.getNumero(), 125, 2, "Joel", 1000,
+                6);
+        contas.cadastrar(cp1);
+        ContaPoupanca cp2 = new ContaPoupanca(contas.getNumero(), 126, 2, "Severina", 8000,
+                24);
+        contas.cadastrar(cp2);
+        contas.listarTodas();
         while (true){
             System.out.println(Cores.TEXT_YELLOW+Cores.ANSI_BLACK_BACKGROUND+
                               "*****************************************************");
@@ -71,22 +73,90 @@ public class Menu {
             switch (opcaoUsuario) {
                 case 1:
                     System.out.println(Cores.TEXT_WHITE+"Criar conta:\n\n");
+                    System.out.println("Digite o número da agência: ");
+                    agencia = input.nextInt();
+                    input.nextLine();
+
+                    System.out.println("Digite o nome do titular: ");
+                    titular = input.nextLine();
+
+                    do {
+                        System.out.println("Digite o tipo da conta? (1-CC ou 2-CP)");
+                        tipo = input.nextInt();
+                    }while (tipo != 1 && tipo != 2);
+
+                    System.out.println("Digite o saldo da conta: ");
+                    saldo = input.nextFloat();
+                    switch (tipo){
+                        case 1 ->{
+                            System.out.println("Digite o limite de crédito: ");
+                            limite = input.nextFloat();
+                            contas.cadastrar(new ContaCorrente(contas.getNumero(),agencia,tipo,titular,saldo,limite));
+                        }
+                        case 2 -> {
+                            System.out.println("Digite o dia de aniversário: ");
+                            aniversario = input.nextInt();
+                            contas.cadastrar(new ContaPoupanca(contas.getNumero(),agencia,tipo,titular,saldo,aniversario));
+                        }
+                    }
                     keyPress();
                     break;
                 case 2:
                     System.out.println(Cores.TEXT_WHITE+"Listar todas as contas:\n\n");
+                    contas.listarTodas();
+
                     keyPress();
                     break;
                 case 3:
                     System.out.println(Cores.TEXT_WHITE+"Consultar dados da Conta - por número:\n\n");
+                    System.out.println("Digite o número da conta: ");
+                    numero = input.nextInt();
+                    contas.procurarPorNumero(numero);
                     keyPress();
                     break;
                 case 4:
-                    System.out.println(Cores.TEXT_WHITE+"Atualizar dados contas:\n\n");
+                    System.out.println(Cores.TEXT_WHITE+"Atualizar dados da conta:\n\n");
+                    System.out.println("Digite o número da conta: ");
+                    numero = input.nextInt();
+                    if (contas.buscarNaCollection(numero) != null){
+                        System.out.println("Digite o número da agência: ");
+                        agencia = input.nextInt();
+
+                        System.out.println("Digite o nome do titular: ");
+                        input.nextLine();
+                        titular = input.nextLine();
+
+                        System.out.println("Digite o saldo da conta (R$): ");
+                        saldo = input.nextFloat();
+
+                        tipo = contas.retornaTipo(numero);
+                        switch (tipo){
+                            case 1 ->{
+                                System.out.println("Digite o limite de crédito: ");
+                                limite = input.nextFloat();
+                                contas.atualizar(new ContaCorrente(numero,agencia,tipo,titular,saldo,limite));
+                            }
+                            case 2 -> {
+                                System.out.println("Digite o dia de aniversário: ");
+                                aniversario = input.nextInt();
+                                contas.atualizar(new ContaPoupanca(numero,agencia,tipo,titular,saldo,aniversario));
+                            }
+                            default -> {
+                                System.out.println("Tipo de conta inválido!");
+                            }
+                        }
+
+                    }
+                    else {
+                        System.out.println("\nConta não encontrada!");
+                    }
                     keyPress();
                     break;
                 case 5:
                     System.out.println(Cores.TEXT_WHITE+"Apagar conta:\n\n");
+                    System.out.println("Digite o número da conta: ");
+                    numero = input.nextInt();
+                    contas.deletar(numero);
                     keyPress();
                     break;
                 case 6:
@@ -110,7 +180,6 @@ public class Menu {
         }
     }
     public static void keyPress() {
-
         try {
             System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para Continuar...");
             System.in.read();
