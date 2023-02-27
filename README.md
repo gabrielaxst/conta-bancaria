@@ -1,2 +1,3 @@
 # conta-bancaria
-Projeto 01 - Conta Bancária - Iniciando o Projeto Java Bootcamp Generation
+Primeiro projeto realizado no Bootcamp da Generation.
+Foram utilizados diversos conceitos de OOP com a linguagem Java.

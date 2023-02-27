@@ -14,9 +14,9 @@ public class Menu {
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
         Scanner input = new Scanner(System.in);
-        int opcaoUsuario, numero, agencia, tipo, aniversario;
+        int opcaoUsuario, numero, agencia, tipo, aniversario, numeroDestino;
         String titular;
-        float saldo, limite;
+        float saldo, limite, valor;
 
         ContaController contas = new ContaController();
 
@@ -161,14 +161,45 @@ public class Menu {
                     break;
                 case 6:
                     System.out.println(Cores.TEXT_WHITE+"Saque:\n\n");
+                    System.out.println("Digite o número da conta: ");
+                    numero = input.nextInt();
+
+                    do {
+                        System.out.println("Digite o valor: ");
+                        valor = input.nextFloat();
+                    }while (valor <= 0);
+
+                    contas.sacar(numero, valor);
+
                     keyPress();
                     break;
                 case 7:
                     System.out.println(Cores.TEXT_WHITE+"Depósito:\n\n");
+                    System.out.println("Digite o número da conta: ");
+                    numero = input.nextInt();
+
+                    do {
+                        System.out.println("Digite o valor: ");
+                        valor = input.nextFloat();
+                    }while (valor <= 0);
+
+                    contas.depositar(numero, valor);
+
                     keyPress();
                     break;
                 case 8:
                     System.out.println(Cores.TEXT_WHITE+"Transferência entre contas:\n\n");
+                    System.out.println("Digite o número da conta de origem: ");
+                    numero = input.nextInt();
+
+                    System.out.println("Digite o número da conta de destino: ");
+                    numeroDestino = input.nextInt();
+                    do {
+                        System.out.println("Digite o valor: ");
+                        valor = input.nextFloat();
+                    }while (valor <= 0);
+
+                    contas.transferir(numero, numeroDestino, valor);
                     keyPress();
                     break;
                 default:
